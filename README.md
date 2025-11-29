@@ -12,7 +12,7 @@
 This mod enables the drop dash ability for all characters in Sonic Mania Plus:
 - Tails, Knuckles, Mighty, and Ray can now perform drop dashes
 - Mighty also has a special hammer drop dash when enabled
-- All characters now have the same ground mobility as Sonic(It activates by holding Down button + Jump button after jumping)!
+- All characters now have the same ground mobility as Sonic!
 
 ## ✨ Features
 
