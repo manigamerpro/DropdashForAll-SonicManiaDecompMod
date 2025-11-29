@@ -1,9 +1,9 @@
-# DropdashForAll-SonicManiaDecompMod
-# Dropdash For All - Sonic Mania Plus Mod
+# Dropdash For All - Sonic Mania Decompilation Mod
 
 [![License](https://img.shields.io/badge/license-Custom-orange.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Sonic%20Mania%20Plus-orange.svg)]()
 [![Version](https://img.shields.io/badge/version-1.0-brightgreen.svg)]()
+[![Gamebanana](https://img.shields.io/badge/Gamebanana-Page-orange.svg)](https://gamebanana.com/mods/636552)
 
 > A mod that adds drop dash functionality to all characters in Sonic Mania Plus, making gameplay more consistent across all playable characters.
 
