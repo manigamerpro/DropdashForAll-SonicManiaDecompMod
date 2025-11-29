@@ -1,0 +1,78 @@
+cmake_minimum_required(VERSION 3.10)
+
+project(DropdashForAll VERSION 1.0.0)
+
+option(BUILD_FOR_PREPLUS "Build for Mania Pre-Plus version" OFF)
+option(BUILD_FIRST_RELEASE "Build for Mania First Release" OFF)
+
+set(DEFAULT_RETRO_REVISION 3)
+set(DEFAULT_MOD_LOADER_VERSION 2)
+set(DEFAULT_GAME_VERSION 6)
+
+if(BUILD_FOR_PREPLUS)
+    set(RETRO_REVISION ${DEFAULT_RETRO_REVISION} CACHE STRING "Retro engine revision")
+    set(RETRO_MOD_LOADER_VER ${DEFAULT_MOD_LOADER_VERSION} CACHE STRING "Mod loader version")
+    set(GAME_VERSION 3 CACHE STRING "Game version for Pre-Plus build")
+else()
+    set(RETRO_REVISION ${DEFAULT_RETRO_REVISION} CACHE STRING "Retro engine revision")
+    set(RETRO_MOD_LOADER_VER ${DEFAULT_MOD_LOADER_VERSION} CACHE STRING "Mod loader version")
+    set(GAME_VERSION 6 CACHE STRING "Game version for latest Steam build")
+endif()
+
+set(GAMEAPI_SEARCH_PATHS
+    ${CMAKE_CURRENT_SOURCE_DIR}/GameAPI
+    ${CMAKE_CURRENT_SOURCE_DIR}/../GameAPI
+    ${CMAKE_CURRENT_SOURCE_DIR}/RSDKv5-GameAPI
+    ${CMAKE_CURRENT_SOURCE_DIR}/../RSDKv5-GameAPI
+)
+
+find_path(GAMEAPI_ROOT
+    NAMES C
+    PATHS ${GAMEAPI_SEARCH_PATHS}
+    NO_DEFAULT_PATH
+)
+
+if(GAMEAPI_ROOT)
+    message(STATUS "GameAPI found at: ${GAMEAPI_ROOT}")
+else()
+    message(FATAL_ERROR "GameAPI not found in any of the expected locations: ${GAMEAPI_SEARCH_PATHS}")
+endif()
+
+set(GAMEAPI_SOURCE_PATH "${GAMEAPI_ROOT}/C/GameAPI/Game.c")
+if(NOT EXISTS "${GAMEAPI_SOURCE_PATH}")
+    message(FATAL_ERROR "GameAPI source file not found at: ${GAMEAPI_SOURCE_PATH}")
+endif()
+
+set(SOURCE_FILES
+    dllmain.c
+    ${GAMEAPI_SOURCE_PATH}
+)
+
+add_library(DropdashForAll SHARED ${SOURCE_FILES})
+
+target_include_directories(DropdashForAll PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${GAMEAPI_ROOT}/C
+)
+
+target_compile_definitions(DropdashForAll PRIVATE
+    RETRO_REVISION=${RETRO_REVISION}
+    RETRO_USE_MOD_LOADER=1
+    RETRO_MOD_LOADER_VER=${RETRO_MOD_LOADER_VER}
+    GAME_INCLUDE_EDITOR=1
+    MANIA_PREPLUS=$<BOOL:${BUILD_FOR_PREPLUS}>
+    MANIA_FIRST_RELEASE=$<BOOL:${BUILD_FIRST_RELEASE}>
+    GAME_VERSION=${GAME_VERSION}
+    GAME_TYPE=1
+)
+
+set_target_properties(DropdashForAll PROPERTIES
+    OUTPUT_NAME "DropdashForAll"
+    PREFIX ""
+    SUFFIX ".dll"
+)
+
+set_target_properties(DropdashForAll PROPERTIES
+    C_STANDARD 11
+    C_STANDARD_REQUIRED ON
+)
